@@ -265,6 +265,168 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
+<section id="effect-of-correlated-attributes" class="level2">
+<h2 class="anchored" data-anchor-id="effect-of-correlated-attributes">Effect of correlated attributes</h2>
+<p>Creating the correlated attributes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate the variables</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>X2 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> X <span class="sc">+</span> <span class="fu">rnorm</span>(numInstances, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.04</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>X3 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> X2 <span class="sc">+</span> <span class="fu">rnorm</span>(numInstances, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.01</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>X4 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> X3 <span class="sc">+</span> <span class="fu">rnorm</span>(numInstances, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.01</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>X5 <span class="ot">&lt;-</span> <span class="fl">0.5</span> <span class="sc">*</span> X4 <span class="sc">+</span> <span class="fu">rnorm</span>(numInstances, <span class="at">mean=</span><span class="dv">0</span>, <span class="at">sd=</span><span class="fl">0.01</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create plots</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>plot1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(X, X2), <span class="at">color=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'X'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'X2'</span>) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Correlation between X and X2 = %.4f"</span>, <span class="fu">cor</span>(X[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)], X2[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)])))</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>plot2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(X2, X3), <span class="at">color=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'X2'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'X3'</span>) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Correlation between X2 and X3 = %.4f"</span>, <span class="fu">cor</span>(X2[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)], X3[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)])))</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>plot3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(X3, X4), <span class="at">color=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'X3'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'X4'</span>) <span class="sc">+</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Correlation between X3 and X4 = %.4f"</span>, <span class="fu">cor</span>(X3[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)], X4[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)])))</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>plot4 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(X4, X5), <span class="at">color=</span><span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">'X4'</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">'X5'</span>) <span class="sc">+</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">sprintf</span>(<span class="st">"Correlation between X4 and X5 = %.4f"</span>, <span class="fu">cor</span>(X4[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)], X5[<span class="sc">-</span><span class="fu">c</span>((numInstances<span class="sc">-</span>numTest<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>numInstances)])))</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine plots into a 2x2 grid</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot1, plot2, plot3, plot4, <span class="at">ncol=</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw-04_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data into training and testing sets</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>train_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>(numInstances <span class="sc">-</span> numTest)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>test_indices <span class="ot">&lt;-</span> (numInstances <span class="sc">-</span> numTest <span class="sc">+</span> <span class="dv">1</span>)<span class="sc">:</span>numInstances</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Create combined training and testing sets</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>X_train2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[train_indices], X2[train_indices])</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>X_test2 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[test_indices], X2[test_indices])</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>X_train3 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[train_indices], X2[train_indices], X3[train_indices])</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>X_test3 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[test_indices], X2[test_indices], X3[test_indices])</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>X_train4 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[train_indices], X2[train_indices], X3[train_indices], X4[train_indices])</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>X_test4 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[test_indices], X2[test_indices], X3[test_indices], X4[test_indices])</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>X_train5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[train_indices], X2[train_indices], X3[train_indices], X4[train_indices], X5[train_indices])</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>X_test5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[test_indices], X2[test_indices], X3[test_indices], X4[test_indices], X5[test_indices])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert matrices to tibbles for training</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>train_data2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">X1 =</span> X_train2[,<span class="dv">1</span>], <span class="at">X2 =</span> X_train2[,<span class="dv">2</span>], <span class="at">y =</span> y_train)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>train_data3 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">X1 =</span> X_train3[,<span class="dv">1</span>], <span class="at">X2 =</span> X_train3[,<span class="dv">2</span>], <span class="at">X3 =</span> X_train3[,<span class="dv">3</span>], <span class="at">y =</span> y_train)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>train_data4 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">X1 =</span> X_train4[,<span class="dv">1</span>], <span class="at">X2 =</span> X_train4[,<span class="dv">2</span>], <span class="at">X3 =</span> X_train4[,<span class="dv">3</span>], <span class="at">X4 =</span> X_train4[,<span class="dv">4</span>], <span class="at">y =</span> y_train)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>train_data5 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">X1 =</span> X_train5[,<span class="dv">1</span>], <span class="at">X2 =</span> X_train5[,<span class="dv">2</span>], <span class="at">X3 =</span> X_train5[,<span class="dv">3</span>], <span class="at">X4 =</span> X_train5[,<span class="dv">4</span>], <span class="at">X5 =</span> X_train5[,<span class="dv">5</span>], <span class="at">y =</span> y_train)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Train models</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>regr2_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>regr2_fit <span class="ot">&lt;-</span> regr2_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(y <span class="sc">~</span> X1 <span class="sc">+</span> X2, <span class="at">data =</span> train_data2)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>regr3_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>regr3_fit <span class="ot">&lt;-</span> regr3_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3, <span class="at">data =</span> train_data3)</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>regr4_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>regr4_fit <span class="ot">&lt;-</span> regr4_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3 <span class="sc">+</span> X4, <span class="at">data =</span> train_data4)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>regr5_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>regr5_fit <span class="ot">&lt;-</span> regr5_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3 <span class="sc">+</span> X4 <span class="sc">+</span> X5, <span class="at">data =</span> train_data5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert matrices to data.frames for predictions</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>new_train_data2 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_train2), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>))</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>new_test_data2 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_test2), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>))</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>new_train_data3 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_train3), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>))</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>new_test_data3 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_test3), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>new_train_data4 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_train4), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>))</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>new_test_data4 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_test4), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>new_train_data5 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_train5), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>, <span class="st">"X5"</span>))</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>new_test_data5 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_test5), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>, <span class="st">"X3"</span>, <span class="st">"X4"</span>, <span class="st">"X5"</span>))</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Predictions</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>y_pred_train2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr2_fit, <span class="at">new_data =</span> new_train_data2)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>y_pred_test2 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr2_fit, <span class="at">new_data =</span> new_test_data2)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>y_pred_train3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr3_fit, <span class="at">new_data =</span> new_train_data3)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>y_pred_test3 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr3_fit, <span class="at">new_data =</span> new_test_data3)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>y_pred_train4 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr4_fit, <span class="at">new_data =</span> new_train_data4)</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>y_pred_test4 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr4_fit, <span class="at">new_data =</span> new_test_data4)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>y_pred_train5 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr5_fit, <span class="at">new_data =</span> new_train_data5)</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>y_pred_test5 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr5_fit, <span class="at">new_data =</span> new_test_data5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficients and intercepts</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>get_coef <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  coef <span class="ot">&lt;-</span> <span class="fu">coefficients</span>(model<span class="sc">$</span>fit)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  coef</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate RMSE</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>calculate_rmse <span class="ot">&lt;-</span> <span class="cf">function</span>(actual, predicted) {</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  rmse <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(<span class="fu">mean</span>((actual <span class="sc">-</span> predicted)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  rmse</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="fu">sprintf</span>(<span class="st">"%.2f X + %.2f"</span>, <span class="fu">get_coef</span>(regr2_fit)[<span class="st">'X1'</span>], <span class="fu">get_coef</span>(regr2_fit)[<span class="st">'(Intercept)'</span>]),</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sprintf</span>(<span class="st">"%.2f X + %.2f X2 + %.2f"</span>, <span class="fu">get_coef</span>(regr3_fit)[<span class="st">'X1'</span>], <span class="fu">get_coef</span>(regr3_fit)[<span class="st">'X2'</span>], <span class="fu">get_coef</span>(regr3_fit)[<span class="st">'(Intercept)'</span>]),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sprintf</span>(<span class="st">"%.2f X + %.2f X2 + %.2f X3 + %.2f"</span>, <span class="fu">get_coef</span>(regr4_fit)[<span class="st">'X1'</span>], <span class="fu">get_coef</span>(regr4_fit)[<span class="st">'X2'</span>], <span class="fu">get_coef</span>(regr4_fit)[<span class="st">'X3'</span>], <span class="fu">get_coef</span>(regr4_fit)[<span class="st">'(Intercept)'</span>]),</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sprintf</span>(<span class="st">"%.2f X + %.2f X2 + %.2f X3 + %.2f X4 + %.2f"</span>, <span class="fu">get_coef</span>(regr5_fit)[<span class="st">'X1'</span>], <span class="fu">get_coef</span>(regr5_fit)[<span class="st">'X2'</span>], <span class="fu">get_coef</span>(regr5_fit)[<span class="st">'X3'</span>], <span class="fu">get_coef</span>(regr5_fit)[<span class="st">'X4'</span>], <span class="fu">get_coef</span>(regr5_fit)[<span class="st">'(Intercept)'</span>])),</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Train_error =</span> <span class="fu">c</span>(<span class="fu">calculate_rmse</span>(y_train, y_pred_train2<span class="sc">$</span>.pred),</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">calculate_rmse</span>(y_train, y_pred_train3<span class="sc">$</span>.pred),</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">calculate_rmse</span>(y_train, y_pred_train4<span class="sc">$</span>.pred),</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">calculate_rmse</span>(y_train, y_pred_train5<span class="sc">$</span>.pred)),</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">Test_error =</span> <span class="fu">c</span>(<span class="fu">calculate_rmse</span>(y_test, y_pred_test2<span class="sc">$</span>.pred),</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">calculate_rmse</span>(y_test, y_pred_test3<span class="sc">$</span>.pred),</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">calculate_rmse</span>(y_test, y_pred_test4<span class="sc">$</span>.pred),</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>                 <span class="fu">calculate_rmse</span>(y_test, y_pred_test5<span class="sc">$</span>.pred)),</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sum_of_Absolute_Weights =</span> <span class="fu">c</span>(<span class="fu">sum</span>(<span class="fu">abs</span>(<span class="fu">get_coef</span>(regr2_fit))),</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">sum</span>(<span class="fu">abs</span>(<span class="fu">get_coef</span>(regr3_fit))),</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">sum</span>(<span class="fu">abs</span>(<span class="fu">get_coef</span>(regr4_fit))),</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">sum</span>(<span class="fu">abs</span>(<span class="fu">get_coef</span>(regr5_fit))))</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(results, <span class="fu">aes</span>(<span class="at">x =</span> Sum_of_Absolute_Weights)) <span class="sc">+</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Train_error, <span class="at">color =</span> <span class="st">"Train error"</span>), <span class="at">linetype =</span> <span class="st">"solid"</span>) <span class="sc">+</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Test_error, <span class="at">color =</span> <span class="st">"Test error"</span>), <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sum of Absolute Weights"</span>, <span class="at">y =</span> <span class="st">"Error rate"</span>) <span class="sc">+</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="hw-04_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>results </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  Model                            Train_error Test_error Sum_of_Absolute_Weig…¹
+  &lt;chr&gt;                                  &lt;dbl&gt;      &lt;dbl&gt;                  &lt;dbl&gt;
+1 -0.53 X + -1.05                         1.33       1.30                   3.64
+2 0.34 X + 20.99 X2 + -1.05               1.26       1.35                  62.8 
+3 0.07 X + 22.72 X2 + -66.35 X3 +…        1.18       1.49                 137.  
+4 -1.83 X + 22.46 X2 + -63.04 X3 …        1.17       1.53                 178.  
+# ℹ abbreviated name: ¹​Sum_of_Absolute_Weights</code></pre>
+</div>
+</div>
+</section>
 </section>
 
 </main>
