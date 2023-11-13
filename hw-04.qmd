@@ -1,0 +1,169 @@
+---
+title: "hw-04"
+author: "VISHAL BHASHAAM"
+format: html
+editor: visual
+---
+
+# Regression in r
+
+## Synthetic data generation
+
+```{r}
+# Required packages
+if (!require(pacman))
+  install.packages("pacman")
+
+pacman::p_load(tidymodels,
+               tidyverse,
+               ranger,
+               randomForest,
+               glmnet,
+               gridExtra)
+
+# Global ggplot theme
+theme_set(theme_bw() + theme(legend.position = "top"))
+```
+
+```{r}
+# Parameters 
+seed <- 1
+numInstances <- 200 
+
+# set seed
+set.seed(seed)
+
+# Generate data 
+X <- matrix(runif(numInstances),ncol=1)
+y_true <- -3*X + 1
+y <- y_true + matrix(rnorm(numInstances), ncol =1)
+
+
+# Plot 
+ggplot() +
+  geom_point(aes(x=X, y=y),color = "black") +
+  geom_line(aes(x=X,y=y_true),color = "blue", linewidth = 1)+ 
+  ggtitle("True function: y = -3X + 1") +
+  xlab("X")+
+  ylab('y')
+```
+
+## Multiple linear regression
+
+Step 1: split input data into training and test sets:
+
+```{r}
+# Train/test split
+library(rsample)
+
+numTrain <- 20
+numTest <-numInstances - numTrain
+
+set.seed(123)
+
+data <- tibble(X=X, y=y)
+
+split_obj <-initial_split(data, prop = numTrain/numInstances)
+
+# Extract train and test data 
+
+train_data <- training(split_obj)
+test_data <-  testing(split_obj)
+
+# Extract X_train, X_test , y_train, y_test
+
+X_train <-train_data$X
+y_train <-train_data$y
+
+X_test <- test_data$X
+y_test <- test_data$y
+```
+
+Step 2: Fit regression model to Training Set
+
+```{r,warning=FALSE}
+# Create a linear regression model specification 
+library(parsnip)
+
+lin_ref_spec <-  linear_reg() |>
+
+  set_engine("lm")
+
+# Fit the model to the training data
+
+lin_reg_fit <-lin_ref_spec |>
+  fit(y~ X, data = train_data)
+```
+
+Step 3: Apply Model to the Test Set
+
+```{r}
+# Apply model to the test set 
+y_pred_test <- predict(lin_reg_fit, new_data =test_data) |>
+  pull(.pred)
+```
+
+Step 4: Evaluate Model Performance on the test set
+
+```{r}
+# Plotting true vs ppredicted values
+
+ggplot() +
+   geom_point(aes(x= as.vector(y_test), y= y_pred_test), color ="black")+
+  ggtitle("Comparing true and predicted variable for the test set")+
+  xlab("True values for y")+
+  ylab("Predicted values for y")
+
+```
+
+```{r}
+library(yardstick)
+
+# Prepare data for yardstick evaluation
+truth  <-  as.vector(y_test)
+estimate <- y_pred_test
+eval_data <- tibble (
+  truth  = as.vector(y_test),
+  estimate = y_pred_test
+)
+
+# Model evaluation
+
+rmse_value <- mean((truth - estimate)^2) %>% sqrt()
+r2_value <- rsq(eval_data, truth = truth, estimate = estimate)
+
+cat("Root mean squared error =", sprintf("%.4f",rmse_value),"\n")
+
+```
+
+```{r}
+cat('R-squared =', sprintf("%.4f",r2_value$.estimate),"\n")
+```
+
+Step 5: Postprocessing
+
+```{r}
+# Display model parameters
+
+coef_values <- coef(lin_reg_fit$fit) # Extract Coefficients
+slope <- coef_values["X"]
+intercept <- coef_values["(Intercept)"]
+
+cat ("Slope =", intercept,"\n")
+```
+
+```{r}
+### Step 4: Preprocessing
+
+# Plot Outputs
+ggplot() +
+  geom_point(aes(x = as.vector(X_test), y = as.vector(y_test )),color = "black")+ 
+  geom_line(aes(x= as.vector(X_test), y = y_pred_test), color = "blue",linewidth = 1)+
+  ggtitle(sprintf('Predicted function: y = %.2fX + %.2f', slope, intercept)) +
+   xlab('X') +
+  ylab('y')
+```
+
+```{r}
+
+```
