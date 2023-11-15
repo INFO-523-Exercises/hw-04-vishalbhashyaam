@@ -19,9 +19,10 @@ Alphabet (GOOGL), and Meta Platforms (META) and more!
 
 # Regression in r
 
-Regression is a modeling technique for predicting quantitative-valued target attributes.
+Regression is a modeling technique for predicting quantitative-valued target attributes. Works on the principle of `y = mx + c` .
 
 ```{r}
+# Reading the CSV
 stock<- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv')
 
 
@@ -70,14 +71,18 @@ y <- y_true + matrix(rnorm(numInstances), ncol =1)
 ggplot(stock,aes(x=X, y=y)) +
  geom_point(color = "red") +
   geom_smooth(method = "lm",color = "black", linewidth = 1) +
-  ggtitle("stock dataset open and close price relationship") +
+  ggtitle("Stock dataset open and close price relationship") +
   
   theme_classic()+
   xlab("Open price")+
   ylab('close price')
 ```
 
+-   The above plots depicts that when the open price increases the closing price also increases and the data looks to be linear.
+
 ## Multiple linear regression
+
+Multiple linear regression is a statistical method used to model the relationship between a dependent variable and two or more independent variables.
 
 Step 1: split input data into training and test sets:
 
@@ -108,6 +113,8 @@ X_test <- test_data$X
 y_test <- test_data$y
 ```
 
+-   Splitting the data into train and test data.
+
 Step 2: Fit regression model to Training Set
 
 ```{r,warning=FALSE}
@@ -124,6 +131,8 @@ lin_reg_fit <-lin_ref_spec |>
   fit(y~ X, data = train_data)
 ```
 
+-   We are fitting the model using the train data where the X is features (`open` ) and y is the `close` price.
+
 Step 3: Apply Model to the Test Set
 
 ```{r}
@@ -131,6 +140,8 @@ Step 3: Apply Model to the Test Set
 y_pred_test <- predict(lin_reg_fit, new_data =test_data) |>
   pull(.pred)
 ```
+
+-   Exposing model to the new data (test data) to check how generalized the model performs.
 
 Step 4: Evaluate Model Performance on the test set
 
@@ -144,6 +155,8 @@ ggplot() +
   ylab("Predicted values for y")
 
 ```
+
+-   From the above plot we can that the predicted values are close to the true values which says the model has performed good and it is linear, still there is room for improvement.
 
 ```{r}
 library(yardstick)
@@ -165,9 +178,15 @@ cat("Root mean squared error =", sprintf("%.4f",rmse_value),"\n")
 
 ```
 
+-   The `RMSE` value suggest that how foar each point in the data is far away from the true value.
+
+-   2.8092 is relatively low value, so the predictions has less amount of deviation from the true value.
+
 ```{r}
 cat('R-squared =', sprintf("%.4f",r2_value$.estimate),"\n")
 ```
+
+-   `R-Squared` = 0.9993 is high value, which means that the model has a good fit on the data and works well newly exposed data as well.
 
 Step 5: Postprocessing
 
@@ -180,6 +199,8 @@ intercept <- coef_values["(Intercept)"]
 
 cat ("Slope =", intercept,"\n")
 ```
+
+-   The slope of the variables is positive thsi means that two variables are related and when `X` increases so does `y`.
 
 ```{r}
 ### Step 4: Preprocessing
@@ -195,7 +216,9 @@ ggplot() +
 
 ## Effect of correlated attributes
 
-Creating the correlated attributes:
+Finding out how each feature responds to one another: (for example:when one increases other also does or simple words is cause and effect);
+
+Assigning the correlated attributes: (`High, low , adj_close , volume`):
 
 ```{r}
 # mentioning the other features in the data
@@ -230,6 +253,14 @@ plot4 <- ggplot() +
 grid.arrange(plot1, plot2, plot3, plot4, ncol=2)
 ```
 
+-   Plot1: X and X2 has strong correlation as x increases y also increases.
+
+-   Plot2: X2 and X3 has strong correlation as X and X2.
+
+-   Plot 3: X3 and X4 also has strong correlation but has some point of deviation at some point of interval as seen above.
+
+-   Plot 4: X4 and X5 are independent of each other as the graph is not linear so it has a weak correlation.
+
 ```{r}
 # Split data into training and testing sets
 train_indices <- 1:(numInstances - numTest)
@@ -248,6 +279,8 @@ X_test4 <- cbind(X[test_indices], X2[test_indices], X3[test_indices], X4[test_in
 X_train5 <- cbind(X[train_indices], X2[train_indices], X3[train_indices], X4[train_indices], X5[train_indices])
 X_test5 <- cbind(X[test_indices], X2[test_indices], X3[test_indices], X4[test_indices], X5[test_indices])
 ```
+
+-   Again splitting the data into train and test sets for newly created distribution with new features.
 
 ```{r}
 # Convert matrices to tibbles for training
@@ -269,6 +302,10 @@ regr4_fit <- regr4_spec %>% fit(y ~ X1 + X2 + X3 + X4, data = train_data4)
 regr5_spec <- linear_reg() %>% set_engine("lm")
 regr5_fit <- regr5_spec %>% fit(y ~ X1 + X2 + X3 + X4 + X5, data = train_data5)
 ```
+
+-   Fitting different linear models with different set of features.
+
+-   This ensures which features works best to predict the target.
 
 ```{r}
 # Convert matrices to data.frames for predictions
@@ -297,6 +334,8 @@ y_pred_test4 <- predict(regr4_fit, new_data = new_test_data4)
 y_pred_train5 <- predict(regr5_fit, new_data = new_train_data5)
 y_pred_test5 <- predict(regr5_fit, new_data = new_test_data5)
 ```
+
+-   Exposing the created models with different set of features to test set, so that we can find the error and accuracy of the model predictions.
 
 ```{r}
 # Extract coefficients and intercepts
@@ -345,7 +384,16 @@ ggplot(results, aes(x = Sum_of_Absolute_Weights)) +
 results 
 ```
 
+-   Sum of Absolute weights show the model complexity, as you can with our predictions, as the number of features goes higher the model complexity also increases.
+
+-   As you can see, the train error for the model is less compared to the test error which on a higher rate compared. This means that model has overfitting issues (works well on the train data and not the testing data) and works bad for new data.
+
+-   To avoid this issue, we can use regularization (Induce penalty for the model to correct the errors)
+
 ## Ridge Regression
+
+Ridge regression is a model tuning method that is used to analyse any data that suffers from multicollinearity. This method performs L2 regularization. When the issue of
+multicollinearity occurs, least-squares are unbiased, and variances are large, this results in predicted values being far away from the actual values.
 
 ```{r}
 # Convert to data frame
@@ -395,7 +443,17 @@ final_results <- bind_rows(results, values6)
 final_results
 ```
 
+-   As you can see the Ridge regression worked best when there a lot of features used, the last model with 5 features open, high, low, adj_close, volume.
+
+-   The test error has decreased drastically when compared to the other models where was no improvement.
+
+-   The tradeofff here is that the test error has increased but the sum of the weights or the complexity of the model has also increased.
+
+-   But we can that most of the coefficients has been reduced to zero to generalize to the unseen data. Therefore Ridge regression has some progress in reducing the test error rate.
+
 ## Lasso regression
+
+LASSO regression, also known as L1 regularization, is a popular technique used in statistical modeling and machine learning to estimate the relationships between variables and make predictions. LASSO stands for Least Absolute Shrinkage and Selection Operator. The primary goal of LASSO regression is to find a balance between model simplicity and accuracy. It achieves this by adding a penalty term to the traditional linear regression model, which encourages sparse solutions where some coefficients are forced to be exactly zero.
 
 ```{r}
 # Define the lasso specification

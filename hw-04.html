@@ -114,9 +114,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="regression-in-r" class="level1">
 <h1>Regression in r</h1>
-<p>Regression is a modeling technique for predicting quantitative-valued target attributes.</p>
+<p>Regression is a modeling technique for predicting quantitative-valued target attributes. Works on the principle of <code>y = mx + c</code> .</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>stock<span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading the CSV</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>stock<span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_csv</span>(<span class="st">'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2023/2023-02-07/big_tech_stock_prices.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 45088 Columns: 8
 ── Column specification ────────────────────────────────────────────────────────
@@ -184,7 +185,7 @@ date (1): date
 <span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(stock,<span class="fu">aes</span>(<span class="at">x=</span>X, <span class="at">y=</span>y)) <span class="sc">+</span></span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a> <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>,<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"stock dataset open and close price relationship"</span>) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Stock dataset open and close price relationship"</span>) <span class="sc">+</span></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()<span class="sc">+</span></span>
 <span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Open price"</span>)<span class="sc">+</span></span>
@@ -196,9 +197,13 @@ date (1): date
 <p><img src="hw-04_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<ul>
+<li>The above plots depicts that when the open price increases the closing price also increases and the data looks to be linear.</li>
+</ul>
 </section>
 <section id="multiple-linear-regression" class="level2">
 <h2 class="anchored" data-anchor-id="multiple-linear-regression">Multiple linear regression</h2>
+<p>Multiple linear regression is a statistical method used to model the relationship between a dependent variable and two or more independent variables.</p>
 <p>Step 1: split input data into training and test sets:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Train/test split</span></span>
@@ -226,6 +231,9 @@ date (1): date
 <span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>X_test <span class="ot">&lt;-</span> test_data<span class="sc">$</span>X</span>
 <span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>y_test <span class="ot">&lt;-</span> test_data<span class="sc">$</span>y</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>Splitting the data into train and test data.</li>
+</ul>
 <p>Step 2: Fit regression model to Training Set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a linear regression model specification </span></span>
@@ -240,12 +248,18 @@ date (1): date
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>lin_reg_fit <span class="ot">&lt;-</span>lin_ref_spec <span class="sc">|&gt;</span></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(y<span class="sc">~</span> X, <span class="at">data =</span> train_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>We are fitting the model using the train data where the X is features (<code>open</code> ) and y is the <code>close</code> price.</li>
+</ul>
 <p>Step 3: Apply Model to the Test Set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply model to the test set </span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>y_pred_test <span class="ot">&lt;-</span> <span class="fu">predict</span>(lin_reg_fit, <span class="at">new_data =</span>test_data) <span class="sc">|&gt;</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(.pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>Exposing model to the new data (test data) to check how generalized the model performs.</li>
+</ul>
 <p>Step 4: Evaluate Model Performance on the test set</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plotting true vs ppredicted values</span></span>
@@ -259,6 +273,9 @@ date (1): date
 <p><img src="hw-04_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<ul>
+<li>From the above plot we can that the predicted values are close to the true values which says the model has performed good and it is linear, still there is room for improvement.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(yardstick)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -280,12 +297,19 @@ date (1): date
 <pre><code>Root mean squared error = 2.8092 </code></pre>
 </div>
 </div>
+<ul>
+<li><p>The <code>RMSE</code> value suggest that how foar each point in the data is far away from the true value.</p></li>
+<li><p>2.8092 is relatively low value, so the predictions has less amount of deviation from the true value.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">'R-squared ='</span>, <span class="fu">sprintf</span>(<span class="st">"%.4f"</span>,r2_value<span class="sc">$</span>.estimate),<span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>R-squared = 0.9993 </code></pre>
 </div>
 </div>
+<ul>
+<li><code>R-Squared</code> = 0.9993 is high value, which means that the model has a good fit on the data and works well newly exposed data as well.</li>
+</ul>
 <p>Step 5: Postprocessing</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Display model parameters</span></span>
@@ -299,6 +323,9 @@ date (1): date
 <pre><code>Slope = 0.1048996 </code></pre>
 </div>
 </div>
+<ul>
+<li>The slope of the variables is positive thsi means that two variables are related and when <code>X</code> increases so does <code>y</code>.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Step 4: Preprocessing</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -316,7 +343,8 @@ date (1): date
 </section>
 <section id="effect-of-correlated-attributes" class="level2">
 <h2 class="anchored" data-anchor-id="effect-of-correlated-attributes">Effect of correlated attributes</h2>
-<p>Creating the correlated attributes:</p>
+<p>Finding out how each feature responds to one another: (for example:when one increases other also does or simple words is cause and effect);</p>
+<p>Assigning the correlated attributes: (<code>High, low , adj_close , volume</code>):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># mentioning the other features in the data</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
@@ -352,6 +380,12 @@ date (1): date
 <p><img src="hw-04_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<ul>
+<li><p>Plot1: X and X2 has strong correlation as x increases y also increases.</p></li>
+<li><p>Plot2: X2 and X3 has strong correlation as X and X2.</p></li>
+<li><p>Plot 3: X3 and X4 also has strong correlation but has some point of deviation at some point of interval as seen above.</p></li>
+<li><p>Plot 4: X4 and X5 are independent of each other as the graph is not linear so it has a weak correlation.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data into training and testing sets</span></span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>train_indices <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span>(numInstances <span class="sc">-</span> numTest)</span>
@@ -370,6 +404,9 @@ date (1): date
 <span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>X_train5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[train_indices], X2[train_indices], X3[train_indices], X4[train_indices], X5[train_indices])</span>
 <span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>X_test5 <span class="ot">&lt;-</span> <span class="fu">cbind</span>(X[test_indices], X2[test_indices], X3[test_indices], X4[test_indices], X5[test_indices])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>Again splitting the data into train and test sets for newly created distribution with new features.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert matrices to tibbles for training</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>train_data2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">X1 =</span> X_train2[,<span class="dv">1</span>], <span class="at">X2 =</span> X_train2[,<span class="dv">2</span>], <span class="at">y =</span> y_train)</span>
@@ -390,6 +427,10 @@ date (1): date
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>regr5_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>regr5_fit <span class="ot">&lt;-</span> regr5_spec <span class="sc">%&gt;%</span> <span class="fu">fit</span>(y <span class="sc">~</span> X1 <span class="sc">+</span> X2 <span class="sc">+</span> X3 <span class="sc">+</span> X4 <span class="sc">+</span> X5, <span class="at">data =</span> train_data5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li><p>Fitting different linear models with different set of features.</p></li>
+<li><p>This ensures which features works best to predict the target.</p></li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert matrices to data.frames for predictions</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>new_train_data2 <span class="ot">&lt;-</span> <span class="fu">setNames</span>(<span class="fu">as.data.frame</span>(X_train2), <span class="fu">c</span>(<span class="st">"X1"</span>, <span class="st">"X2"</span>))</span>
@@ -417,6 +458,9 @@ date (1): date
 <span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>y_pred_train5 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr5_fit, <span class="at">new_data =</span> new_train_data5)</span>
 <span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>y_pred_test5 <span class="ot">&lt;-</span> <span class="fu">predict</span>(regr5_fit, <span class="at">new_data =</span> new_test_data5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<ul>
+<li>Exposing the created models with different set of features to test set, so that we can find the error and accuracy of the model predictions.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract coefficients and intercepts</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>get_coef <span class="ot">&lt;-</span> <span class="cf">function</span>(model) {</span>
@@ -475,9 +519,15 @@ date (1): date
 # ℹ abbreviated name: ¹​Sum_of_Absolute_Weights</code></pre>
 </div>
 </div>
+<ul>
+<li><p>Sum of Absolute weights show the model complexity, as you can with our predictions, as the number of features goes higher the model complexity also increases.</p></li>
+<li><p>As you can see, the train error for the model is less compared to the test error which on a higher rate compared. This means that model has overfitting issues (works well on the train data and not the testing data) and works bad for new data.</p></li>
+<li><p>To avoid this issue, we can use regularization (Induce penalty for the model to correct the errors)</p></li>
+</ul>
 </section>
 <section id="ridge-regression" class="level2">
 <h2 class="anchored" data-anchor-id="ridge-regression">Ridge Regression</h2>
+<p>Ridge regression is a model tuning method that is used to analyse any data that suffers from multicollinearity. This method performs L2 regularization. When the issue of multicollinearity occurs, least-squares are unbiased, and variances are large, this results in predicted values being far away from the actual values.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to data frame</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">y =</span> y_train, X_train5)</span>
@@ -539,9 +589,16 @@ shorter object length</code></pre>
 # ℹ abbreviated name: ¹​Sum_of_Absolute_Weights</code></pre>
 </div>
 </div>
+<ul>
+<li><p>As you can see the Ridge regression worked best when there a lot of features used, the last model with 5 features open, high, low, adj_close, volume.</p></li>
+<li><p>The test error has decreased drastically when compared to the other models where was no improvement.</p></li>
+<li><p>The tradeofff here is that the test error has increased but the sum of the weights or the complexity of the model has also increased.</p></li>
+<li><p>But we can that most of the coefficients has been reduced to zero to generalize to the unseen data. Therefore Ridge regression has some progress in reducing the test error rate.</p></li>
+</ul>
 </section>
 <section id="lasso-regression" class="level2">
 <h2 class="anchored" data-anchor-id="lasso-regression">Lasso regression</h2>
+<p>LASSO regression, also known as L1 regularization, is a popular technique used in statistical modeling and machine learning to estimate the relationships between variables and make predictions. LASSO stands for Least Absolute Shrinkage and Selection Operator. The primary goal of LASSO regression is to find a balance between model simplicity and accuracy. It achieves this by adding a penalty term to the traditional linear regression model, which encourages sparse solutions where some coefficients are forced to be exactly zero.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the lasso specification</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>lasso_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">penalty =</span> <span class="fl">0.02</span>, <span class="at">mixture =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
