@@ -495,6 +495,10 @@ lasso_results <- tibble(Model = "Lasso",
 lasso_results
 ```
 
+-   We can that lasso has no improvement on train or test error instead it has reduced the complexity of the model by assigning coefficient to zero and making a improvement on sum of absolute weights.
+
+-   Therefore we can conclude lasso regression was no effective for this dataset.
+
 ## Hyperparameter Selection via Cross-validation
 
 ```{r}
@@ -569,6 +573,8 @@ cat("Selected alpha =", best_params$penalty, "\n")
 all_results <- bind_rows(results, ridge_results)
 all_results
 ```
+
+-   Compared to the older results, hyper parameter selection has increased the test error, which doesn't generalize the model, it worked similar to lasso in terms of reducing the complexity of the model.
 
 ```{r}
 set.seed(1234)
@@ -646,3 +652,15 @@ cat("Selected alpha for Lasso =", best_params_lasso$penalty, "\n")
 ```{r}
 lasso_results
 ```
+
+-   We can see that there is no improvement in the model after hyperparameter selection.
+
+-   The old lasso regression and new results are the same.
+
+## Answer to the question:
+
+### How do daily opening prices, trading volumes, and historical trends influence the adjusted closing prices of stocks?
+
+-   Comparing to mulitple models created in this assignment, I can conclude that using open prices to predict the closing price does a better a job in predicting the target.
+
+-   Multiple regression did not work better on this dataset.

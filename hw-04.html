@@ -644,6 +644,10 @@ shorter object length</code></pre>
 1 Lasso 112.484103751038 2037.87898434326 91.4551170916406         </code></pre>
 </div>
 </div>
+<ul>
+<li><p>We can that lasso has no improvement on train or test error instead it has reduced the complexity of the model by assigning coefficient to zero and making a improvement on sum of absolute weights.</p></li>
+<li><p>Therefore we can conclude lasso regression was no effective for this dataset.</p></li>
+</ul>
 </section>
 <section id="hyperparameter-selection-via-cross-validation" class="level2">
 <h2 class="anchored" data-anchor-id="hyperparameter-selection-via-cross-validation">Hyperparameter Selection via Cross-validation</h2>
@@ -733,6 +737,9 @@ shorter object length</code></pre>
 # ℹ 1 more variable: `Sum of Absolute Weights` &lt;chr&gt;</code></pre>
 </div>
 </div>
+<ul>
+<li>Compared to the older results, hyper parameter selection has increased the test error, which doesn’t generalize the model, it worked similar to lasso in terms of reducing the complexity of the model.</li>
+</ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -817,6 +824,20 @@ shorter object length</code></pre>
 1 LassoCV 113.020369643583 2371.37298481271 91.4551170916406         </code></pre>
 </div>
 </div>
+<ul>
+<li><p>We can see that there is no improvement in the model after hyperparameter selection.</p></li>
+<li><p>The old lasso regression and new results are the same.</p></li>
+</ul>
+</section>
+<section id="answer-to-the-question" class="level2">
+<h2 class="anchored" data-anchor-id="answer-to-the-question">Answer to the question:</h2>
+<section id="how-do-daily-opening-prices-trading-volumes-and-historical-trends-influence-the-adjusted-closing-prices-of-stocks" class="level3">
+<h3 class="anchored" data-anchor-id="how-do-daily-opening-prices-trading-volumes-and-historical-trends-influence-the-adjusted-closing-prices-of-stocks">How do daily opening prices, trading volumes, and historical trends influence the adjusted closing prices of stocks?</h3>
+<ul>
+<li><p>Comparing to mulitple models created in this assignment, I can conclude that using open prices to predict the closing price does a better a job in predicting the target.</p></li>
+<li><p>Multiple regression did not work better on this dataset.</p></li>
+</ul>
+</section>
 </section>
 </section>
 
